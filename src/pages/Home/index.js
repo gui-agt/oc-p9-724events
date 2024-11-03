@@ -1,3 +1,5 @@
+import React, { useState } from "react";
+
 import Menu from "../../containers/Menu";
 import ServiceCard from "../../components/ServiceCard";
 import EventCard from "../../components/EventCard";
@@ -13,7 +15,16 @@ import Modal from "../../containers/Modal";
 import { useData } from "../../contexts/DataContext";
 
 const Page = () => {
-  const {last} = useData()
+  
+  // Gestion EventCard
+  const { data } = useData();
+  const sortedEvents = data?.events?.sort((evtA, evtB) => new Date(evtB.date) - new Date(evtA.date));
+  const last = sortedEvents?.[0];
+ 
+  // Gestion de la modale du formulaire
+  const [modalContent, setModalContent] = useState(0); // null / État pour le contenu de la modale
+  const [isOpenedModal, setIsOpenedModal] = useState(false); // false / État pour la visibilité de la modale
+
   return <>
     <header>
       <Menu />
@@ -94,20 +105,36 @@ const Page = () => {
       <div className="FormContainer" id="contact">
         <h2 className="Title">Contact</h2>
         <Modal
-          Content={
-            <div className="ModalMessage--success">
-              <div>Message envoyé !</div>
-              <p>
-                Merci pour votre message nous tâcherons de vous répondre dans
-                les plus brefs délais
-              </p>
-            </div>
-          }
+          isOpened={isOpenedModal}
+          setIsOpened={setIsOpenedModal} // Ajout pour fermer la modale
+          Content={modalContent} // Le contenu de la modale dépend de l'état
         >
           {({ setIsOpened }) => (
             <Form
-              onSuccess={() => setIsOpened(true)}
-              onError={() => null}
+              onSuccess={() => {
+                setModalContent(
+                  <div className="ModalMessage">
+                    <div>Message envoyé !</div>
+                    <p>
+                      Merci pour votre message, nous tâcherons de vous répondre
+                      dans les plus brefs délais.
+                    </p>
+                  </div>
+                );
+                setIsOpened(true); // Ouvre la modale
+              }}
+              onError={() => {
+                setModalContent(
+                  <div className="ModalMessage">
+                    <div>Erreur lors de l&apos;envoi</div>
+                    <p>
+                      Un des champs est manquant. Veuillez remplir tous les champs
+                      obligatoires (*).
+                    </p>
+                  </div>
+                );
+                setIsOpened(true); // Ouvre la modale avec le message d'erreur
+              }}
             />
           )}
         </Modal>
@@ -117,11 +144,11 @@ const Page = () => {
       <div className="col presta">
         <h3>Notre derniére prestation</h3>
         <EventCard
-          imageSrc={last?.cover}
-          title={last?.title}
-          date={new Date(last?.date)}
+          imageSrc={last?.cover || ""}
+          title={last?.title || ""}
+          date={new Date(last?.date) || ""}
           small
-          label="boom"
+          label={last?.type || ""} // modification "boom"
         />
       </div>
       <div className="col contact">

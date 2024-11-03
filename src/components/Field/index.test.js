@@ -3,19 +3,19 @@ import Field, { FIELD_TYPES } from "./index";
 
 describe("When a field is created", () => {
   it("a name is set on the field", () => {
-    render(<Field name="field-name" />);
-    const fieldElement = screen.getByTestId("field-testid");
+    render(<Field name="field-name" onChange={() => {}} />); // ajout onChange
+    const fieldElement = screen.getByTestId(`testid-field-name`);
     expect(fieldElement).toBeInTheDocument();
     expect(fieldElement.name).toEqual("field-name");
   });
   it("a placeholder is set on the field", () => {
-    render(<Field placeholder="field-placeholder" name="test" />);
-    const fieldElement = screen.getByTestId("field-testid");
+    render(<Field placeholder="field-placeholder" name="test" onChange={() => {}} />); // ajout onChange
+    const fieldElement = screen.getByTestId("testid-test");
     expect(fieldElement.placeholder).toEqual("field-placeholder");
   });
 
   it("a label is set with field", () => {
-    render(<Field placeholder="field-placeholder" label="field_label" name="test" />);
+    render(<Field placeholder="field-placeholder" label="field_label" name="test" onChange={() => {}} />); // ajout onChange
     const labelElement = screen.getByText(/field_label/);
     expect(labelElement).toBeInTheDocument();
   });
@@ -24,7 +24,7 @@ describe("When a field is created", () => {
     it("a onChange value is executed", () => {
       const onChange = jest.fn();
       render(<Field onChange={onChange} name="test" />);
-      const fieldElement = screen.getByTestId("field-testid");
+      const fieldElement = screen.getByTestId("testid-test");
       fireEvent(
         fieldElement,
         new MouseEvent("click", {
@@ -39,7 +39,7 @@ describe("When a field is created", () => {
     it("a text input is rendered", () => {
       window.console.error = jest.fn().mockImplementation(() => null); // disable propTypes warning
       render(<Field type={FIELD_TYPES.INPUT_TEXT} name="test" />);
-      const fieldElement = screen.getByTestId("field-testid");
+      const fieldElement = screen.getByTestId("testid-test");
       expect(fieldElement.type).toEqual("text");
     });
   });
@@ -48,7 +48,7 @@ describe("When a field is created", () => {
     it("a textarea is rendered", () => {
       window.console.error = jest.fn().mockImplementation(() => null); // disable propTypes warning
       render(<Field type={FIELD_TYPES.TEXTAREA} name="test" />);
-      const fieldElement = screen.getByTestId("field-testid");
+      const fieldElement = screen.getByTestId("testid-message");
       expect(fieldElement.type).toEqual("textarea");
     });
   });
@@ -57,7 +57,7 @@ describe("When a field is created", () => {
     it("a text input is rendered", () => {
       window.console.error = jest.fn().mockImplementation(() => null); // disable propTypes warning
       render(<Field type="wrong-type" name="test" />);
-      const fieldElement = screen.getByTestId("field-testid");
+      const fieldElement = screen.getByTestId("testid-message");
       expect(fieldElement.type).toEqual("text");
     });
   });

@@ -7,7 +7,8 @@ export const FIELD_TYPES = {
   TEXTAREA: 2,
 };
 
-const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
+// ajout de onChange dans les props
+const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder, onChange }) => {
   let component;
   switch (type) {
     case FIELD_TYPES.INPUT_TEXT:
@@ -16,12 +17,13 @@ const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
           type="text"
           name={name}
           placeholder={placeholder}
-          data-testid="field-testid"
+          onChange={onChange} // ajout de onChange
+          data-testid={`testid-${name}`}
         />
       );
       break;
     case FIELD_TYPES.TEXTAREA:
-      component = <textarea name={name} data-testid="field-testid" />;
+      component = <textarea name={name} onChange={onChange} data-testid="testid-message" />;
       break;
     default:
       component = (
@@ -29,7 +31,8 @@ const Field = ({ type = FIELD_TYPES.INPUT_TEXT, label, name, placeholder }) => {
           type="text"
           name={name}
           placeholder={placeholder}
-          data-testid="field-testid"
+          onChange={onChange} // ajout de la gestion de l'évènement onChange
+          data-testid="testid-message"
         />
       );
   }
@@ -46,6 +49,7 @@ Field.propTypes = {
   name: PropTypes.string,
   label: PropTypes.string,
   placeholder: PropTypes.string,
+  onChange: PropTypes.func.isRequired, // ajout de la validation pour onChange
 };
  Field.defaultProps = {
    label: "",

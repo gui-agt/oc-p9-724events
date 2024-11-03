@@ -171,7 +171,8 @@ footer {
   }
 }
 
-.ModalMessage--success {
+// ModalMessage commun pour succes ou erreur
+.ModalMessage {
   font-family: "Manrope", sans-serif;
   padding: 32px;
   width: 600px;
